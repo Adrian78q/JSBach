@@ -1,0 +1,16 @@
+#!/bin/bash
+
+######################################################################
+###  Estat
+######################################################################
+fnc_enrutar_estat() {
+	
+	source $DIR_WAN/wan.conf
+	if sysctml -n net.ipv4.ip_forward | grep -q '¹$' && \
+	   iptables -t nat -C POSTROUTING -o $WAN_INT -j MASQUERADE 2>/dev/null; then
+	   echo "$Activat"
+	else
+	   echo "$Desactivat"
+	fi
+	
+}

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+######################################################################
+###  Iniciar
+######################################################################
+fnc_enrutar_iniciar() {
+	
+	RESULTAT=$($DIR_ENRUTAR/enrutar estat | head -n 1)
+	
+	if [ "$RESULTAT" = "$Activat" ]; then
+	    echo "Ja esta actiu"
+	    exit 1
+	fi
+	
+	source $DIR_WAN/wan.conf
+	sysctl -w net.ipv4.ip_forward=1
+	iptables -t nat -A POSTROUTING -o $WAN_INT -j MASQUERADE
+	
+}
+
+######################################################################
+###  Aturar
+######################################################################
+fnc_enrutar_aturar() {
+	
+	RESULTAT=$($DIR_ENRUTAR/enrutar estat | head -n 1)
+	
+	if [ "$RESULTAT" = "$Desactivat" ]; then
+	    echo "Ja esta desactivat"
+	    exit 1
+	fi
+	
+	source $DIR_WAN/wan.conf
+	sysctl -w net.ipv4.ip_forward=1
+	iptables -t nat -D POSTROUTING -o $WAN_INT -j MASQUERADE
+}
